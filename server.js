@@ -1,4 +1,3 @@
-// Load environment variables
 require("dotenv").config();
 
 const express = require("express");
@@ -22,7 +21,6 @@ mongodb.initDb((err) => {
   } else {
     console.log("Database initialized successfully");
 
-    // Start server ONLY after DB connects
     app.listen(PORT, () => {
       console.log(`Event Planner API running on port ${PORT}`);
     });
