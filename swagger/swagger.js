@@ -10,7 +10,7 @@ const options = {
     },
     servers: [
       {
-        url: "http://localhost:3000",
+        url: "https://cse341-code-leticia.onrender.com",
       },
     ],
     components: {
