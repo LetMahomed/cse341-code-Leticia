@@ -10,7 +10,7 @@ exports.getAllEvents = async (req, res, next) => {
   }
 };
 
-// GET event by ID
+// GET event ID
 exports.getEventById = async (req, res, next) => {
   try {
     const event = await Event.findById(req.params.id);
