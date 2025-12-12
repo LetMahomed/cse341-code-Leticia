@@ -8,7 +8,7 @@
   "host": "cse341-code-leticia.onrender.com",
   "basePath": "/",
   "schemes": [
-    "http"
+    "https"
   ],
   "paths": {
     "/swagger/api-docs": {
