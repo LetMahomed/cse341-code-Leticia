@@ -23,72 +23,50 @@ const getSingle = async (req, res) => {
 
 const createEvent = async (req, res) => {
     //#swagger.tags = ['Events'] 
-    const { title, description, date, ownerId, venueId, capacity } = req.body;
-
-    if (!title || !description || !date || !ownerId || !venueId || !capacity) {
-        return res.status(400).json({ message: "Missing required fields" });
-    }
-
-    // Validate ObjectIds
-    if (!ObjectId.isValid(ownerId) || !ObjectId.isValid(venueId)) {
-        return res.status(400).json({ message: "Invalid ownerId or venueId" });
-    }
-
-    // Validate date
-    if (isNaN(new Date(date))) {
-        return res.status(400).json({ message: "Invalid date" });
-    }
-
     const event = {
-        title,
-        description,
-        date: new Date(date),
-        ownerId: new ObjectId(ownerId),
-        venueId: new ObjectId(venueId),
-        capacity: Number(capacity),
-    };
-
-    const result = await db.collection('events').insertOne(event);
-    res.status(201).json(result);
+            title: req.body.title,
+            description: req.body.description,
+            date: req.body.date,
+            ownerId: req.body.ownerId,
+            venueId: req.body.venueId,
+            capacity: req.body.capacity,
+        };
+        const response = await mongodb.getDatabase().db().collection('events').insertOne(user);
+        if (response.acknowledged) {
+            res.status(204).send();
+        }  else {
+            res.status(500).json(response.error || 'Some error occurred while creating the user.');
+        }
 };
 
 const updateEvent = async (req, res) => {
     //#swagger.tags = ['Events'] 
-    const eventId = req.params.id;
-
-    if (!ObjectId.isValid(eventId)) return res.status(400).json({ message: "Invalid event ID" });
-
-    const updateFields = {};
-    ['title', 'description', 'date', 'ownerId', 'venueId', 'capacity'].forEach(field => {
-        if (req.body[field] !== undefined) updateFields[field] = req.body[field];
-    });
-
-    if (updateFields.date) updateFields.date = new Date(updateFields.date);
-    if (updateFields.ownerId) updateFields.ownerId = new ObjectId(updateFields.ownerId);
-    if (updateFields.venueId) updateFields.venueId = new ObjectId(updateFields.venueId);
-    if (updateFields.capacity) updateFields.capacity = Number(updateFields.capacity);
-
-    const result = await db.collection('events').updateOne(
-        { _id: new ObjectId(eventId) },
-        { $set: updateFields }
-    );
-
-    if (result.matchedCount > 0) return res.status(404).json({ message: "Event not found" });
-
-    res.status(200).json({ message: "Event updated" });
+    const eventId = new ObjectId(req.params.id);
+        const user = {
+            title: req.body.title,
+            description: req.body.description,
+            date: req.body.date,
+            ownerId: req.body.ownerId,
+            venueId: req.body.venueId,
+            capacity: req.body.capacity,
+        };
+        const response = await mongodb.getDatabase().db().collection('events').replaceOne({ _id: eventId });
+        if (response.modifiedCount > 0) {
+            res.status(204).send();
+        }  else {
+            res.status(500).json(response.error || 'Some error occurred while updating the event.');
+        }
 };
 
 const deleteEvent = async (req, res) => {
     //#swagger.tags = ['Events'] 
-    const eventId = req.params.id;
-
-    if (!ObjectId.isValid(eventId)) return res.status(400).json({ message: "Invalid event ID" });
-
-    const result = await db.collection('events').deleteOne({ _id: new ObjectId(eventId) });
-
-    if (result.deletedCount > 0) return res.status(404).json({ message: "Event not found" });
-
-    res.status(200).json({ message: "Event deleted" });
+    const eventId = new ObjectId(req.params.id);
+        const response = await mongodb.getDatabase().db().collection('events').deleteOne({ _id: eventId }, true);
+        if (response.deletedCount > 0) {
+            res.status(204).send();
+        } else {
+            res.status(500).json(response.error || 'Some error occurred while deleting the event.');
+        }
 };
 
 

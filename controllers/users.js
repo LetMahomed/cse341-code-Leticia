@@ -22,66 +22,48 @@ const getSingle = async (req, res) => {
 
 const createUser = async (req, res) => {
     //#swagger.tags = ['Users'] 
-    const userId = new ObjectId(req.params.id);
-    const { name, email, passwordHash, role } = req.body;
-
-    if (!name || !email || !passwordHash || !role) {
-        return res.status(400).json({ message: "Missing required fields" });
-    }
-    const response = await mongodb.getDatabase().db('').collection('users').find({ _id: userId });
-    if (response.modifiedCount > 0) {
+    const user = {
+        name: req.body.name,
+        email: req.body.email,
+        passwordHash: req.body.passwordHash,
+        role: req.body.role,
+    };
+    const response = await mongodb.getDatabase().db().collection('users').insertOne(user);
+    if (response.acknowledged) {
         res.status(204).send();
-    } else {
-        res.status(500).json(response.error || "Some error occured while updating the user");
+    }  else {
+        res.status(500).json(response.error || 'Some error occurred while creating the user.');
     }
 };
 
 
 const updateUser = async (req, res) => {
     //#swagger.tags = ['Users'] 
-    const userId = req.params.id;
-
-    if (!ObjectId.isValid(userId)) {
-        return res.status(400).json({ message: "Invalid user ID" });
+    const userId = new ObjectId(req.params.id);
+    const user = {
+        name: req.body.name,
+        email: req.body.email,
+        passwordHash: req.body.passwordHash,
+        role: req.body.role,
+    };
+    const response = await mongodb.getDatabase().db().collection('users').replaceOne({ _id: userId }, user);
+    if (response.modifiedCount > 0) {
+        res.status(204).send();
+    }  else {
+        res.status(500).json(response.error || 'Some error occurred while updating the user.');
     }
-
-    const updateFields = {};
-    ['name', 'email', 'role', 'passwordHash'].forEach(field => {
-        if (req.body[field] !== undefined) updateFields[field] = req.body[field];
-    });
-
-    if (Object.keys(updateFields).length === 0) {
-        return res.status(400).json({ message: "No fields to update" });
-    }
-
-    const result = await db.collection('users').updateOne(
-        { _id: new ObjectId(userId) },
-        { $set: updateFields }
-    );
-
-    if (result.matchedCount > 0) {
-        return res.status(404).json({ message: "User not found" });
-    }
-
-    res.status(200).json({ message: "User updated" });
 };
 
 
 const deleteUser = async (req, res) => {
     //#swagger.tags = ['Users'] 
-    const userId = req.params.id;
-
-    if (!ObjectId.isValid(userId)) {
-        return res.status(400).json({ message: "Invalid user ID" });
+    const userId = new ObjectId(req.params.id);
+    const response = await mongodb.getDatabase().db().collection('users').deleteOne({ _id: userId }, true);
+    if (response.deletedCount > 0) {
+        res.status(204).send();
+    } else {
+        res.status(500).json(response.error || 'Some error occurred while deleting the user.');
     }
-
-    const result = await db.collection('users').deleteOne({ _id: new ObjectId(userId) });
-
-    if (result.deletedCount > 0) {
-        return res.status(404).json({ message: "User not found" });
-    }
-
-    res.status(200).json({ message: "User deleted" });
 };
 
 

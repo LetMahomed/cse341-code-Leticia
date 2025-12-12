@@ -6,7 +6,7 @@ const doc = {
         description: 'Event Planner'
     },
     host: 'localhost:3000',
-    schemes: ['https', 'http']
+    schemes: ['http']
 };
 
 const outputFile = './swagger.json';
