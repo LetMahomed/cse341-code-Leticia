@@ -31,7 +31,7 @@ const createEvent = async (req, res) => {
             venueId: req.body.venueId,
             capacity: req.body.capacity,
         };
-        const response = await mongodb.getDatabase().db().collection('events').insertOne(user);
+        const response = await mongodb.getDatabase().db('').collection('events').insertOne(user);
         if (response.acknowledged) {
             res.status(204).send();
         }  else {
@@ -50,7 +50,7 @@ const updateEvent = async (req, res) => {
             venueId: req.body.venueId,
             capacity: req.body.capacity,
         };
-        const response = await mongodb.getDatabase().db().collection('events').replaceOne({ _id: eventId });
+        const response = await mongodb.getDatabase().db('').collection('events').replaceOne({ _id: eventId });
         if (response.modifiedCount > 0) {
             res.status(204).send();
         }  else {
@@ -61,7 +61,7 @@ const updateEvent = async (req, res) => {
 const deleteEvent = async (req, res) => {
     //#swagger.tags = ['Events'] 
     const eventId = new ObjectId(req.params.id);
-        const response = await mongodb.getDatabase().db().collection('events').deleteOne({ _id: eventId }, true);
+        const response = await mongodb.getDatabase().db('').collection('events').deleteOne({ _id: eventId }, true);
         if (response.deletedCount > 0) {
             res.status(204).send();
         } else {
