@@ -1,5 +1,4 @@
 const mongodb = require('../data/database');
-const { get } = require('../routes');
 const ObjectId = require('mongodb').ObjectId;
 
 const getAll = async (req, res) => {
@@ -42,7 +41,7 @@ const createEvent = async (req, res) => {
 const updateEvent = async (req, res) => {
     //#swagger.tags = ['Events'] 
     const eventId = new ObjectId(req.params.id);
-        const user = {
+        const event = {
             title: req.body.title,
             description: req.body.description,
             date: req.body.date,
