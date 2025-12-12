@@ -10,6 +10,7 @@ const GithubStrategy = require('passport-github2').Strategy;
 const cors = require('cors');
 
 const port = process.env.PORT || 3000;
+app.use(express.json());
 
 app.use(bodyParser.json());
 app.use(session({
