@@ -31,7 +31,7 @@ const createEvent = async (req, res) => {
             venueId: req.body.venueId,
             capacity: req.body.capacity,
         };
-        const response = await mongodb.getDatabase().db('').collection('events').insertOne(user);
+        const response = await mongodb.getDatabase().db('').collection('events').insertOne(event);
         if (response.acknowledged) {
             res.status(204).send();
         }  else {
