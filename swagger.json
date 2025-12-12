@@ -183,6 +183,7 @@
           "Events"
         ],
         "description": "",
+        "consumes": ["application/json"],
         "parameters": [
           {
             "name": "body",
@@ -250,6 +251,7 @@
           "Events"
         ],
         "description": "",
+        "consumes": ["application/json"],
         "parameters": [
           {
             "name": "id",
