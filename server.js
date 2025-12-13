@@ -26,6 +26,8 @@ app.use(cors({ methods: ['GET', 'POST', 'DELETE', 'UPDATE', 'PUT', 'PATCH'] }));
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerFile));
 
 app.use('/', require('./routes'));
+app.use('/users', require('./routes/users'));
+app.use('/events', require('./routes/events'));
 
 const isAuthenticated = (req, res, next) => {  
     if (req.session.user === undefined) {
